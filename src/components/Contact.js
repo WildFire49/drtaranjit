@@ -1,12 +1,182 @@
-import React from "react";
-import { Box, Container, Typography, Grid, Paper, Button } from "@mui/material";
+import React, { useState } from "react";
+import {
+  Box,
+  Container,
+  Typography,
+  Grid,
+  Paper,
+  TextField,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  TextareaAutosize,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 import { motion } from "framer-motion";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import PhoneIcon from "@mui/icons-material/Phone";
+
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import dayjs from "dayjs";
 import EmailIcon from "@mui/icons-material/Email";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import PhoneIcon from "@mui/icons-material/Phone";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import InfoIcon from "@mui/icons-material/Info";
 
 const Contact = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    age: "",
+    location: "",
+    phone: "",
+    email: "",
+    symptoms: "",
+    duration: "",
+    previousConsultations: "",
+    referralSource: "",
+    preferredDate: dayjs(),
+    preferredTime: dayjs().hour(9).minute(0),
+  });
+
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleDateChange = (newValue) => {
+    setFormData((prev) => ({
+      ...prev,
+      preferredDate: newValue,
+    }));
+  };
+
+  const handleTimeChange = (newValue) => {
+    setFormData((prev) => ({
+      ...prev,
+      preferredTime: newValue,
+    }));
+  };
+
+  const formatWhatsAppMessage = () => {
+    return encodeURIComponent(`
+*New Patient Inquiry*
+Name: ${formData.name}
+Age: ${formData.age}
+Location: ${formData.location}
+Phone: ${formData.phone}
+Email: ${formData.email}
+
+*Medical Information*
+Symptoms: ${formData.symptoms}
+Duration: ${formData.duration}
+Previous Consultations: ${formData.previousConsultations}
+
+*Referral Source*
+How did you hear about us: ${formData.referralSource}
+
+*Preferred Appointment*
+Date: ${formData.preferredDate.format("DD/MM/YYYY")}
+Time: ${formData.preferredTime.format("hh:mm A")}
+    `);
+  };
+
+  const formatEmailBody = () => {
+    return encodeURIComponent(`
+Subject: New Patient Inquiry - ${formData.name}
+
+Patient Details:
+Name: ${formData.name}
+Age: ${formData.age}
+Location: ${formData.location}
+Phone: ${formData.phone}
+Email: ${formData.email}
+
+Medical Information:
+Symptoms: ${formData.symptoms}
+Duration: ${formData.duration}
+Previous Consultations: ${formData.previousConsultations}
+
+Referral Source:
+How did you hear about us: ${formData.referralSource}
+
+Preferred Appointment:
+Date: ${formData.preferredDate.format("DD/MM/YYYY")}
+Time: ${formData.preferredTime.format("hh:mm A")}
+    `);
+  };
+
+  const handleWhatsAppSubmit = (e) => {
+    e.preventDefault();
+    window.open(
+      `https://wa.me/+918788947831?text=${formatWhatsAppMessage()}`,
+      "_blank"
+    );
+    setSnackbar({
+      open: true,
+      message: "Opening WhatsApp with your inquiry!",
+      severity: "success",
+    });
+    // Reset form
+    setFormData({
+      name: "",
+      age: "",
+      location: "",
+      phone: "",
+      email: "",
+      symptoms: "",
+      duration: "",
+      previousConsultations: "",
+      referralSource: "",
+      preferredDate: dayjs(),
+      preferredTime: dayjs().hour(9).minute(0),
+    });
+  };
+
+  const handleEmailSubmit = (e) => {
+    e.preventDefault();
+    window.location.href = `mailto:vaishakhsk2052@gmail.com?subject=New Patient Inquiry - ${
+      formData.name
+    }&body=${formatEmailBody()}`;
+    setSnackbar({
+      open: true,
+      message: "Opening email client with your inquiry!",
+      severity: "success",
+    });
+    // Reset form
+    setFormData({
+      name: "",
+      age: "",
+      location: "",
+      phone: "",
+      email: "",
+      symptoms: "",
+      duration: "",
+      previousConsultations: "",
+      referralSource: "",
+      preferredDate: dayjs(),
+      preferredTime: dayjs().hour(9).minute(0),
+    });
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar((prev) => ({ ...prev, open: false }));
+  };
+
   return (
     <Box
       id="contact"
@@ -211,6 +381,240 @@ const Contact = () => {
           </Grid>
         </Grid>
       </Container>
+
+      <Container maxWidth="md" sx={{ mt: 8 }}>
+        <Paper
+          elevation={3}
+          sx={{
+            p: 4,
+            borderRadius: 2,
+            background: "white",
+            boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+          }}
+        >
+          <Typography
+            variant="h4"
+            align="center"
+            sx={{
+              mb: 4,
+              fontWeight: 600,
+              color: "primary.main",
+            }}
+          >
+            Schedule a Consultation
+          </Typography>
+
+          <form>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Full Name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Age"
+                  name="age"
+                  type="number"
+                  value={formData.age}
+                  onChange={handleChange}
+                  required
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Location"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleChange}
+                  required
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Phone Number"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  required
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Symptoms/Concerns"
+                  name="symptoms"
+                  value={formData.symptoms}
+                  onChange={handleChange}
+                  required
+                  multiline
+                  rows={3}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="How long have you been experiencing these symptoms?"
+                  name="duration"
+                  value={formData.duration}
+                  onChange={handleChange}
+                  required
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Any previous consultations?"
+                  name="previousConsultations"
+                  value={formData.previousConsultations}
+                  onChange={handleChange}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl fullWidth variant="outlined">
+                  <InputLabel>How did you hear about us?</InputLabel>
+                  <Select
+                    name="referralSource"
+                    value={formData.referralSource}
+                    onChange={handleChange}
+                    label="How did you hear about us?"
+                  >
+                    <MenuItem value="Social Media">Social Media</MenuItem>
+                    <MenuItem value="Friend or Family">Friend or Family</MenuItem>
+                    <MenuItem value="Google Search">Google Search</MenuItem>
+                    <MenuItem value="Doctor Referral">Doctor Referral</MenuItem>
+                    <MenuItem value="Website">Website</MenuItem>
+                    <MenuItem value="Other">Other</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    label="Preferred Date"
+                    value={formData.preferredDate}
+                    onChange={handleDateChange}
+                    minDate={dayjs()}
+                    sx={{ width: "100%" }}
+                  />
+                </LocalizationProvider>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <TimePicker
+                    label="Preferred Time"
+                    value={formData.preferredTime}
+                    onChange={handleTimeChange}
+                    minTime={dayjs().hour(9).minute(0)}
+                    maxTime={dayjs().hour(20).minute(0)}
+                    sx={{ width: "100%" }}
+                  />
+                </LocalizationProvider>
+              </Grid>
+              <Grid item xs={12}>
+                <Box sx={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: 1, 
+                  bgcolor: 'info.light', 
+                  p: 2, 
+                  borderRadius: 1,
+                  color: 'info.dark'
+                }}>
+                  <InfoIcon />
+                  <Typography variant="body2">
+                    <strong>Clinic Hours:</strong> Walk-ins are welcome Monday through Saturday. 
+                    Sunday consultations are by appointment only.
+                  </Typography>
+                </Box>
+              </Grid>
+              <Grid item xs={12}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: 2,
+                    justifyContent: "center",
+                    mt: 2,
+                  }}
+                >
+                  <Button
+                    onClick={handleWhatsAppSubmit}
+                    variant="contained"
+                    size="large"
+                    startIcon={<WhatsAppIcon />}
+                    sx={{
+                      py: 1.5,
+                      px: 4,
+                      borderRadius: 2,
+                      backgroundColor: "#25D366",
+                      "&:hover": {
+                        backgroundColor: "#128C7E",
+                      },
+                    }}
+                  >
+                    Send via WhatsApp
+                  </Button>
+                  <Button
+                    onClick={handleEmailSubmit}
+                    variant="contained"
+                    size="large"
+                    startIcon={<EmailIcon />}
+                    sx={{
+                      py: 1.5,
+                      px: 4,
+                      borderRadius: 2,
+                    }}
+                  >
+                    Send via Email
+                  </Button>
+                </Box>
+              </Grid>
+            </Grid>
+          </form>
+        </Paper>
+      </Container>
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

@@ -119,7 +119,7 @@ const Home = () => {
                     textShadow: "1px 1px 2px rgba(0,0,0,0.15)",
                   }}
                 >
-                  Professor (Dr.) Taranjit Kaur
+                  (Professor) Dr. Taranjit Kaur
                 </Typography>
 
                 <motion.div
@@ -265,7 +265,7 @@ const Home = () => {
               md={6}
               sx={{
                 position: "relative",
-                mt: { xs: 4, md: 0 },
+                mt: { xs: 4, md: 3 },
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
