@@ -14,13 +14,16 @@ import {
   TextareaAutosize,
   Snackbar,
   Alert,
+  Dialog,
+  DialogContent,
+  DialogTitle,
 } from "@mui/material";
 import { motion } from "framer-motion";
 
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { StaticTimePicker } from "@mui/x-date-pickers/StaticTimePicker";
 import dayjs from "dayjs";
 import EmailIcon from "@mui/icons-material/Email";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -44,6 +47,7 @@ const Contact = () => {
     preferredTime: dayjs().hour(9).minute(0),
   });
 
+  const [openTimePicker, setOpenTimePicker] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -507,7 +511,9 @@ Time: ${formData.preferredTime.format("hh:mm A")}
                     label="How did you hear about us?"
                   >
                     <MenuItem value="Social Media">Social Media</MenuItem>
-                    <MenuItem value="Friend or Family">Friend or Family</MenuItem>
+                    <MenuItem value="Friend or Family">
+                      Friend or Family
+                    </MenuItem>
                     <MenuItem value="Google Search">Google Search</MenuItem>
                     <MenuItem value="Doctor Referral">Doctor Referral</MenuItem>
                     <MenuItem value="Website">Website</MenuItem>
@@ -527,31 +533,88 @@ Time: ${formData.preferredTime.format("hh:mm A")}
                 </LocalizationProvider>
               </Grid>
               <Grid item xs={12} sm={6}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <TimePicker
-                    label="Preferred Time"
-                    value={formData.preferredTime}
-                    onChange={handleTimeChange}
-                    minTime={dayjs().hour(9).minute(0)}
-                    maxTime={dayjs().hour(20).minute(0)}
-                    sx={{ width: "100%" }}
-                  />
-                </LocalizationProvider>
+                <TextField
+                  fullWidth
+                  label="Preferred Time"
+                  value={formData.preferredTime.format("hh:mm A")}
+                  onClick={() => setOpenTimePicker(true)}
+                  InputProps={{
+                    readOnly: true,
+                    endAdornment: <AccessTimeIcon color="action" />,
+                  }}
+                  sx={{
+                    cursor: "pointer",
+                    "& .MuiInputBase-root": {
+                      cursor: "pointer",
+                    },
+                  }}
+                />
+                <Dialog
+                  open={openTimePicker}
+                  onClose={() => setOpenTimePicker(false)}
+                  PaperProps={{
+                    sx: {
+                      borderRadius: 2,
+                      maxWidth: "100%",
+                      margin: 2,
+                    },
+                  }}
+                >
+                  <DialogTitle
+                    sx={{
+                      textAlign: "center",
+                      pb: 0,
+                      color: "primary.main",
+                      fontWeight: 600,
+                    }}
+                  >
+                    Select Time
+                  </DialogTitle>
+                  <DialogContent>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <StaticTimePicker
+                        value={formData.preferredTime}
+                        onChange={(newValue) => {
+                          handleTimeChange(newValue);
+                          setOpenTimePicker(false);
+                        }}
+                        minTime={dayjs().hour(9).minute(0)}
+                        maxTime={dayjs().hour(20).minute(0)}
+                        sx={{
+                          width: "100%",
+                          "& .MuiClock-pin": {
+                            backgroundColor: "primary.main",
+                          },
+                          "& .MuiClockPointer-root": {
+                            backgroundColor: "primary.main",
+                            "& .MuiClockPointer-thumb": {
+                              backgroundColor: "primary.main",
+                              borderColor: "primary.main",
+                            },
+                          },
+                        }}
+                      />
+                    </LocalizationProvider>
+                  </DialogContent>
+                </Dialog>
               </Grid>
               <Grid item xs={12}>
-                <Box sx={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  gap: 1, 
-                  bgcolor: 'info.light', 
-                  p: 2, 
-                  borderRadius: 1,
-                  color: 'info.dark'
-                }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                    bgcolor: "info.light",
+                    p: 2,
+                    borderRadius: 1,
+                    color: "info.dark",
+                  }}
+                >
                   <InfoIcon />
                   <Typography variant="body2">
-                    <strong>Clinic Hours:</strong> Walk-ins are welcome Monday through Saturday. 
-                    Sunday consultations are by appointment only.
+                    <strong>Clinic Hours:</strong> Walk-ins are welcome Monday
+                    through Saturday. Sunday consultations are by appointment
+                    only.
                   </Typography>
                 </Box>
               </Grid>
