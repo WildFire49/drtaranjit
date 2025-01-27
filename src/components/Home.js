@@ -190,6 +190,7 @@ const Home = () => {
                 sx={{
                   mt: 6,
                   position: "relative",
+                  width: "100%",
                   "&::before": {
                     content: '""',
                     position: "absolute",
@@ -213,10 +214,12 @@ const Home = () => {
                       backdropFilter: "blur(4px)",
                       borderRadius: "15px",
                       border: "1px solid rgba(255,255,255,0.1)",
-                      p: 3,
-                      width: 760,
+                      p: { xs: 2, sm: 3 },
+                      width: { xs: "90%", sm: "95%", md: 760 },
+                      maxWidth: 760,
                       mx: "auto",
                       boxShadow: "0 8px 32px rgba(0,0,0,0.1)",
+                      overflow: "hidden",
                     }}
                   >
                     <motion.div
@@ -236,13 +239,18 @@ const Home = () => {
                         sx={{
                           color: "white",
                           fontWeight: 500,
-                          width: 700,
-                          fontSize: { xs: "1.2rem", md: "1.4rem" },
+                          width: "100%",
+                          fontSize: {
+                            xs: "1.1rem",
+                            sm: "1.2rem",
+                            md: "1.4rem",
+                          },
                           fontStyle: "italic",
                           textAlign: "center",
                           textShadow: "2px 2px 4px rgba(0,0,0,0.2)",
-                          letterSpacing: "1.5px",
+                          letterSpacing: { xs: "1px", md: "1.5px" },
                           lineHeight: 1.5,
+                          px: { xs: 1, sm: 2 },
                           "& span": {
                             color: "#4bde75",
                             fontWeight: 600,
