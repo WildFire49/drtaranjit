@@ -1,9 +1,9 @@
-import React from "react";
-import { Box, Container, Typography, Button, Grid } from "@mui/material";
+import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import { motion } from "framer-motion";
+import React from "react";
 import bannerImg from "../assets/photos/banner.jpg";
-import WhatsAppButton from "./WhatsAppButton";
 import Reviews from "./Reviews";
+import WhatsAppButton from "./WhatsAppButton";
 
 // Animation variants for consistent animations
 const fadeInLeft = {
@@ -384,6 +384,7 @@ const Home = () => {
       </Box>
 
       <Reviews />
+
       <WhatsAppButton />
     </>
   );
