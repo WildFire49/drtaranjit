@@ -1,36 +1,35 @@
-import React, { useState } from "react";
 import {
-  Box,
-  Container,
-  Typography,
-  Grid,
-  Paper,
-  TextField,
-  Button,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  TextareaAutosize,
-  Snackbar,
   Alert,
+  Box,
+  Button,
+  Container,
   Dialog,
   DialogContent,
   DialogTitle,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  Snackbar,
+  TextField,
+  Typography,
 } from "@mui/material";
 import { motion } from "framer-motion";
+import React, { useState } from "react";
 
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { StaticTimePicker } from "@mui/x-date-pickers/StaticTimePicker";
-import dayjs from "dayjs";
-import EmailIcon from "@mui/icons-material/Email";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import EmailIcon from "@mui/icons-material/Email";
+import InfoIcon from "@mui/icons-material/Info";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PhoneIcon from "@mui/icons-material/Phone";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import InfoIcon from "@mui/icons-material/Info";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { StaticTimePicker } from "@mui/x-date-pickers/StaticTimePicker";
+import dayjs from "dayjs";
 
 const Contact = () => {
   const [formData, setFormData] = useState({

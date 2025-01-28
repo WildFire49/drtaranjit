@@ -112,11 +112,19 @@ const Home = () => {
                 <Typography
                   variant="h2"
                   sx={{
-                    color: "rgba(255, 255, 255, 0.9)",
-                    fontWeight: 500,
+                    color: "#f7fcfe",
+                    fontWeight: 700,
                     mb: 2,
                     fontSize: { xs: "1.5rem", sm: "1.8rem", md: "2rem" },
-                    textShadow: "1px 1px 2px rgba(0,0,0,0.15)",
+                    display: "inline-block",
+                    textShadow: "1px 1px 2px rgba(18, 93, 145, 0.69)",
+                    padding: "1rem 1rem",
+                    borderRadius: "14px",
+                    background: "transparent",
+                    // background: "rgba(18, 93, 145, 0.69)",
+                    backdropFilter: "blur(5px)",
+                    boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+                    border: "2px solid rgba(255, 255, 255, 0.15)",
                   }}
                 >
                   (Professor) Dr. Taranjit Kaur
@@ -144,46 +152,6 @@ const Home = () => {
                     state-of-the-art facility and expert team are dedicated to
                     your oral health and comfort.
                   </Typography>
-
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      width: "100%",
-                      mt: 4,
-                      mb: 2,
-                    }}
-                  >
-                    <Button
-                      variant="contained"
-                      size="large"
-                      sx={{
-                        backgroundColor: "white",
-                        color: "primary.main",
-                        px: 6,
-                        py: 1.5,
-                        fontSize: "1.1rem",
-                        fontWeight: 600,
-                        borderRadius: "30px",
-                        boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
-                        minWidth: "250px",
-                        "&:hover": {
-                          backgroundColor: "rgba(255, 255, 255, 0.9)",
-                          transform: "translateY(-2px)",
-                          boxShadow: "0 6px 20px rgba(0,0,0,0.25)",
-                        },
-                        transition: "all 0.3s ease-in-out",
-                      }}
-                      onClick={() => {
-                        document
-                          .getElementById("contact")
-                          .scrollIntoView({ behavior: "smooth" });
-                      }}
-                    >
-                      Book an Appointment
-                    </Button>
-                  </Box>
                 </motion.div>
               </motion.div>
               <Box
@@ -210,7 +178,8 @@ const Home = () => {
                 >
                   <Box
                     sx={{
-                      background: "#1a4b83",
+                      // background: "rgba(18, 93, 145, 0.69)",
+                      background: "transparent",
                       backdropFilter: "blur(4px)",
                       borderRadius: "15px",
                       border: "1px solid rgba(255,255,255,0.1)",
@@ -228,31 +197,30 @@ const Home = () => {
                         scale: [1, 1.02, 1],
                       }}
                       transition={{
-                        duration: 3,
+                        duration: 4,
                         repeat: Infinity,
                         repeatType: "reverse",
                         ease: "easeInOut",
                       }}
                     >
                       <Typography
-                        variant="h3"
+                        variant="h2"
                         sx={{
                           color: "white",
-                          fontWeight: 500,
+                          fontWeight: 600,
                           width: "100%",
                           fontSize: {
                             xs: "1.1rem",
                             sm: "1.2rem",
-                            md: "1.4rem",
+                            md: "1.44rem",
                           },
-                          fontStyle: "italic",
                           textAlign: "center",
                           textShadow: "2px 2px 4px rgba(0,0,0,0.2)",
                           letterSpacing: { xs: "1px", md: "1.5px" },
-                          lineHeight: 1.5,
+                          lineHeight: 1.1,
                           px: { xs: 1, sm: 2 },
                           "& span": {
-                            color: "#4bde75",
+                            color: "#3cdf61",
                             fontWeight: 600,
                           },
                         }}
@@ -380,6 +348,45 @@ const Home = () => {
               </motion.div>
             </Grid>
           </Grid>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "100%",
+              mt: 5,
+              mb: 2,
+            }}
+          >
+            <Button
+              variant="contained"
+              size="large"
+              sx={{
+                backgroundColor: "white",
+                color: "primary.main",
+                px: 5,
+                py: 1.5,
+                fontSize: "1.1rem",
+                fontWeight: 600,
+                borderRadius: "30px",
+                boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
+                minWidth: "250px",
+                "&:hover": {
+                  backgroundColor: "rgba(255, 255, 255, 0.9)",
+                  transform: "translateY(-2px)",
+                  boxShadow: "0 6px 20px rgba(0,0,0,0.25)",
+                },
+                transition: "all 0.3s ease-in-out",
+              }}
+              onClick={() => {
+                document
+                  .getElementById("contact")
+                  .scrollIntoView({ behavior: "smooth" });
+              }}
+            >
+              Book an Appointment
+            </Button>
+          </Box>
         </Container>
       </Box>
 
