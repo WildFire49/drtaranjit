@@ -68,7 +68,7 @@ const services = [
     title: "Medical Patient Care",
     description: "Comprehensive medical care for overall well-being.",
     image: consultingImg,
-    delay: 1.0,
+    delay: 0.9,
     procedures: [
       "Health assessments",
       "Preventive care",
@@ -80,7 +80,7 @@ const services = [
     title: "Face Esthetics and Cosmetology",
     description: "Advanced cosmetic procedures for facial enhancement",
     image: consultingImg,
-    delay: 1.2,
+    delay: 0.95,
     procedures: [
       "IV Glutathione therapy",
       "PRP/GFC skin boosters & hair scalp boosters",
@@ -94,7 +94,7 @@ const services = [
     title: "TMJ Disorder Management",
     description: "Comprehensive care using biopsychosocial model",
     image: servicesImg,
-    delay: 1.4,
+    delay: 0.78,
     procedures: [
       "Multidisciplinary approach with specialists",
       "Complete condition assessment",
