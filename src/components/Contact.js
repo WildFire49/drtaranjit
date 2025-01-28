@@ -9,12 +9,14 @@ import {
   FormControl,
   Grid,
   InputLabel,
+  LinearProgress,
   MenuItem,
   Paper,
   Select,
   Snackbar,
   TextField,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import React, { useState } from "react";
@@ -32,6 +34,7 @@ import { StaticTimePicker } from "@mui/x-date-pickers/StaticTimePicker";
 import dayjs from "dayjs";
 
 const Contact = () => {
+  const theme = useTheme();
   const [formData, setFormData] = useState({
     name: "",
     age: "",
@@ -46,6 +49,8 @@ const Contact = () => {
     preferredTime: dayjs().hour(9).minute(0),
   });
 
+  const [formProgress, setFormProgress] = useState(0);
+  const [formErrors, setFormErrors] = useState({});
   const [openTimePicker, setOpenTimePicker] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -53,26 +58,55 @@ const Contact = () => {
     severity: "success",
   });
 
+  const calculateProgress = () => {
+    const totalFields = 10; // Total number of required fields
+    const filledFields = Object.entries(formData).filter(([key, value]) => {
+      // Check if the value exists and is not empty string, excluding previousConsultations
+      if (key === 'previousConsultations') return false;
+      if (key === 'preferredDate' || key === 'preferredTime') return true;
+      return value && value.toString().trim() !== '';
+    }).length;
+    return (filledFields / totalFields) * 100;
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => {
+      const newFormData = {
+        ...prev,
+        [name]: value
+      };
+      // Update progress after state change
+      setTimeout(() => setFormProgress(calculateProgress()), 0);
+      return newFormData;
+    });
+
+    // Clear error when field is filled
+    if (value && formErrors[name]) {
+      setFormErrors(prev => ({ ...prev, [name]: "" }));
+    }
   };
 
   const handleDateChange = (newValue) => {
-    setFormData((prev) => ({
-      ...prev,
-      preferredDate: newValue,
-    }));
+    setFormData((prev) => {
+      const newFormData = {
+        ...prev,
+        preferredDate: newValue
+      };
+      setTimeout(() => setFormProgress(calculateProgress()), 0);
+      return newFormData;
+    });
   };
 
   const handleTimeChange = (newValue) => {
-    setFormData((prev) => ({
-      ...prev,
-      preferredTime: newValue,
-    }));
+    setFormData((prev) => {
+      const newFormData = {
+        ...prev,
+        preferredTime: newValue
+      };
+      setTimeout(() => setFormProgress(calculateProgress()), 0);
+      return newFormData;
+    });
   };
 
   const formatWhatsAppMessage = () => {
@@ -123,8 +157,47 @@ Time: ${formData.preferredTime.format("hh:mm A")}
     `);
   };
 
+  const validateForm = () => {
+    const errors = {};
+    const requiredFields = [
+      "name",
+      "age",
+      "location",
+      "phone",
+      "email",
+      "symptoms",
+      "duration",
+      "referralSource",
+    ];
+
+    requiredFields.forEach((field) => {
+      if (!formData[field]) {
+        errors[field] = "This field is required";
+      }
+    });
+
+    if (formData.email && !/\S+@\S+\.\S+/.test(formData.email)) {
+      errors.email = "Please enter a valid email address";
+    }
+
+    if (formData.phone && !/^\d{10}$/.test(formData.phone)) {
+      errors.phone = "Please enter a valid 10-digit phone number";
+    }
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleWhatsAppSubmit = (e) => {
     e.preventDefault();
+    if (!validateForm()) {
+      setSnackbar({
+        open: true,
+        message: "Please fill in all required fields correctly",
+        severity: "error",
+      });
+      return;
+    }
     window.open(
       `https://wa.me/+918788947831?text=${formatWhatsAppMessage()}`,
       "_blank"
@@ -152,6 +225,14 @@ Time: ${formData.preferredTime.format("hh:mm A")}
 
   const handleEmailSubmit = (e) => {
     e.preventDefault();
+    if (!validateForm()) {
+      setSnackbar({
+        open: true,
+        message: "Please fill in all required fields correctly",
+        severity: "error",
+      });
+      return;
+    }
     window.location.href = `mailto:vaishakhsk2052@gmail.com?subject=New Patient Inquiry - ${
       formData.name
     }&body=${formatEmailBody()}`;
@@ -356,7 +437,7 @@ Time: ${formData.preferredTime.format("hh:mm A")}
                   }}
                 >
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3768.8906351120147!2d72.99254837495558!3d19.156144982062967!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7bf57fd3e1c75%3A0x32f0db6d7c1cba63!2sHealing+Touch+Centre!5e0!3m2!1sen!2sin!4v1706274992650!5m2!1sen!2sin"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3847.5714391749837!2d73.95559723438923!3d15.275162157815393!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bbfb32c84f36181%3A0x7bfdfa215827b143!2sProf(Dr)%20Taranjit%20Kaur&#39;s%20Healing%20Touch%20Centre!5e0!3m2!1sen!2sin!4v1706456550974!5m2!1sen!2sin"
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
@@ -408,6 +489,33 @@ Time: ${formData.preferredTime.format("hh:mm A")}
           </Typography>
 
           <form>
+            <Box sx={{ width: "100%", mb: 4 }}>
+              <LinearProgress
+                variant="determinate"
+                value={formProgress}
+                sx={{
+                  height: 10,
+                  borderRadius: 5,
+                  backgroundColor: theme.palette.grey[200],
+                  "& .MuiLinearProgress-bar": {
+                    borderRadius: 5,
+                    backgroundColor:
+                      formProgress === 100
+                        ? theme.palette.success.main
+                        : theme.palette.primary.main,
+                  },
+                }}
+              />
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                align="center"
+                sx={{ mt: 1 }}
+              >
+                {Math.round(formProgress)}% Complete
+              </Typography>
+            </Box>
+
             <Grid container spacing={3}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -417,9 +525,22 @@ Time: ${formData.preferredTime.format("hh:mm A")}
                   value={formData.name}
                   onChange={handleChange}
                   required
+                  error={!!formErrors.name}
+                  helperText={formErrors.name}
                   variant="outlined"
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      "&:hover fieldset": {
+                        borderColor: theme.palette.primary.main,
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: theme.palette.primary.main,
+                      },
+                    },
+                  }}
                 />
               </Grid>
+
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
@@ -429,9 +550,22 @@ Time: ${formData.preferredTime.format("hh:mm A")}
                   value={formData.age}
                   onChange={handleChange}
                   required
+                  error={!!formErrors.age}
+                  helperText={formErrors.age}
                   variant="outlined"
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      "&:hover fieldset": {
+                        borderColor: theme.palette.primary.main,
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: theme.palette.primary.main,
+                      },
+                    },
+                  }}
                 />
               </Grid>
+
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
@@ -440,9 +574,22 @@ Time: ${formData.preferredTime.format("hh:mm A")}
                   value={formData.location}
                   onChange={handleChange}
                   required
+                  error={!!formErrors.location}
+                  helperText={formErrors.location}
                   variant="outlined"
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      "&:hover fieldset": {
+                        borderColor: theme.palette.primary.main,
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: theme.palette.primary.main,
+                      },
+                    },
+                  }}
                 />
               </Grid>
+
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
@@ -451,9 +598,22 @@ Time: ${formData.preferredTime.format("hh:mm A")}
                   value={formData.phone}
                   onChange={handleChange}
                   required
+                  error={!!formErrors.phone}
+                  helperText={formErrors.phone}
                   variant="outlined"
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      "&:hover fieldset": {
+                        borderColor: theme.palette.primary.main,
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: theme.palette.primary.main,
+                      },
+                    },
+                  }}
                 />
               </Grid>
+
               <Grid item xs={12}>
                 <TextField
                   fullWidth
@@ -463,9 +623,22 @@ Time: ${formData.preferredTime.format("hh:mm A")}
                   value={formData.email}
                   onChange={handleChange}
                   required
+                  error={!!formErrors.email}
+                  helperText={formErrors.email}
                   variant="outlined"
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      "&:hover fieldset": {
+                        borderColor: theme.palette.primary.main,
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: theme.palette.primary.main,
+                      },
+                    },
+                  }}
                 />
               </Grid>
+
               <Grid item xs={12}>
                 <TextField
                   fullWidth
@@ -474,11 +647,24 @@ Time: ${formData.preferredTime.format("hh:mm A")}
                   value={formData.symptoms}
                   onChange={handleChange}
                   required
+                  error={!!formErrors.symptoms}
+                  helperText={formErrors.symptoms}
                   multiline
                   rows={3}
                   variant="outlined"
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      "&:hover fieldset": {
+                        borderColor: theme.palette.primary.main,
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: theme.palette.primary.main,
+                      },
+                    },
+                  }}
                 />
               </Grid>
+
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
@@ -487,9 +673,22 @@ Time: ${formData.preferredTime.format("hh:mm A")}
                   value={formData.duration}
                   onChange={handleChange}
                   required
+                  error={!!formErrors.duration}
+                  helperText={formErrors.duration}
                   variant="outlined"
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      "&:hover fieldset": {
+                        borderColor: theme.palette.primary.main,
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: theme.palette.primary.main,
+                      },
+                    },
+                  }}
                 />
               </Grid>
+
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
@@ -498,8 +697,19 @@ Time: ${formData.preferredTime.format("hh:mm A")}
                   value={formData.previousConsultations}
                   onChange={handleChange}
                   variant="outlined"
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      "&:hover fieldset": {
+                        borderColor: theme.palette.primary.main,
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: theme.palette.primary.main,
+                      },
+                    },
+                  }}
                 />
               </Grid>
+
               <Grid item xs={12}>
                 <FormControl fullWidth variant="outlined">
                   <InputLabel>How did you hear about us?</InputLabel>
@@ -508,6 +718,8 @@ Time: ${formData.preferredTime.format("hh:mm A")}
                     value={formData.referralSource}
                     onChange={handleChange}
                     label="How did you hear about us?"
+                    error={!!formErrors.referralSource}
+                    helperText={formErrors.referralSource}
                   >
                     <MenuItem value="Social Media">Social Media</MenuItem>
                     <MenuItem value="Friend or Family">
@@ -520,6 +732,7 @@ Time: ${formData.preferredTime.format("hh:mm A")}
                   </Select>
                 </FormControl>
               </Grid>
+
               <Grid item xs={12} sm={6}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
@@ -531,6 +744,7 @@ Time: ${formData.preferredTime.format("hh:mm A")}
                   />
                 </LocalizationProvider>
               </Grid>
+
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
@@ -597,6 +811,7 @@ Time: ${formData.preferredTime.format("hh:mm A")}
                   </DialogContent>
                 </Dialog>
               </Grid>
+
               <Grid item xs={12}>
                 <Box
                   sx={{
@@ -617,6 +832,7 @@ Time: ${formData.preferredTime.format("hh:mm A")}
                   </Typography>
                 </Box>
               </Grid>
+
               <Grid item xs={12}>
                 <Box
                   sx={{
@@ -624,6 +840,7 @@ Time: ${formData.preferredTime.format("hh:mm A")}
                     gap: 2,
                     justifyContent: "center",
                     mt: 2,
+                    flexWrap: "wrap",
                   }}
                 >
                   <Button
@@ -633,11 +850,14 @@ Time: ${formData.preferredTime.format("hh:mm A")}
                     startIcon={<WhatsAppIcon />}
                     sx={{
                       py: 1.5,
-                      px: 4,
+                      px: { xs: 3, sm: 4 },
                       borderRadius: 2,
                       backgroundColor: "#25D366",
+                      transition: "all 0.3s ease",
                       "&:hover": {
                         backgroundColor: "#128C7E",
+                        transform: "translateY(-2px)",
+                        boxShadow: "0 4px 12px rgba(37, 211, 102, 0.3)",
                       },
                     }}
                   >
@@ -650,8 +870,13 @@ Time: ${formData.preferredTime.format("hh:mm A")}
                     startIcon={<EmailIcon />}
                     sx={{
                       py: 1.5,
-                      px: 4,
+                      px: { xs: 3, sm: 4 },
                       borderRadius: 2,
+                      transition: "all 0.3s ease",
+                      "&:hover": {
+                        transform: "translateY(-2px)",
+                        boxShadow: "0 4px 12px rgba(25, 118, 210, 0.3)",
+                      },
                     }}
                   >
                     Send via Email
