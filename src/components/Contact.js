@@ -356,7 +356,7 @@ Time: ${formData.preferredTime.format("hh:mm A")}
                   }}
                 >
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3768.8906351120147!2d72.99254837495558!3d19.156144982062967!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7bf57fd3e1c75%3A0x32f0db6d7c1cba63!2sHealing+Touch+Centre!5e0!3m2!1sen!2sin!4v1706274992650!5m2!1sen!2sin"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3847.5714391749837!2d73.95559723438923!3d15.275162157815393!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bbfb32c84f36181%3A0x7bfdfa215827b143!2sProf(Dr)%20Taranjit%20Kaur&#39;s%20Healing%20Touch%20Centre!5e0!3m2!1sen!2sin!4v1706456550974!5m2!1sen!2sin"
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
