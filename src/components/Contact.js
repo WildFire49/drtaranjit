@@ -327,8 +327,7 @@ Time: ${formData.preferredTime.format("hh:mm A")}
                           Location
                         </Typography>
                         <Typography variant="body1" color="text.secondary">
-                          Shop No 3, Sai Siddhi Building, Sector 15, Airoli,
-                          Navi Mumbai, Maharashtra 400708
+                        Shop 37, Upper Ground Floor, Vasant Arcade, Comba, Madgaon, Goa 403601
                         </Typography>
                       </Box>
                     </Box>
@@ -827,7 +826,7 @@ Time: ${formData.preferredTime.format("hh:mm A")}
                   <InfoIcon />
                   <Typography variant="body2">
                     <strong>Clinic Hours:</strong> Walk-ins are welcome Monday
-                    through Saturday. Sunday consultations are by appointment
+                    through Saturday. <br/>  <strong>Sunday </strong>consultations are by appointment
                     only.
                   </Typography>
                 </Box>
