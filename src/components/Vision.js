@@ -10,6 +10,7 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import doctorOperating from "../assets/photos/doctor-operatiing.jpg";
 import doctorOperation2 from "../assets/photos/doctor-operation-2.jpg";
+import reception from "../assets/photos/reception.jpg";
 
 const features = [
   {
@@ -147,7 +148,7 @@ const Vision = () => {
             >
               <Box
                 component="img"
-                src={doctorOperation2}
+                src={reception}
                 alt="Doctor Operating"
                 sx={{
                   width: "95%",
